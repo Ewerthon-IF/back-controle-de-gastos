@@ -1,5 +1,12 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { Investimentos } from './entities/investimentos.entity';
+import { Regioes } from './entities/regioes.entity';
+import { Revenda } from './entities/revenda.entity';
+
+import { InvestimentosModule } from './investimentos/investimentos.module';
+import { RegioesModule } from './regioes/regioes.module';
+import { RevendaModule } from './revenda/revenda.module';
 
 @Module({
   imports: [
@@ -10,9 +17,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       username: 'root',
       password: 'macacorosa',
       database: 'controle',
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      entities: [Investimentos, Regioes, Revenda],
       synchronize: true
     }),
+    InvestimentosModule,
+    RegioesModule,
+    RevendaModule,
   ],
 })
 export class AppModule {}
