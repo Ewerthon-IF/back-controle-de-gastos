@@ -1,5 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
-import { Investimentos } from '../entities/investimentos.entity';
+import { Controller, Get, Param } from '@nestjs/common';
 import { InvestimentosService } from './investimentos.service';
 
 
@@ -17,8 +16,4 @@ export class InvestimentosController {
         return this.investimentosService.buscar(id);
     }
 
-    @Post()
-    criar(@Body() investimento: Investimentos) {
-        return this.investimentosService.criar(investimento);
-    }
 }

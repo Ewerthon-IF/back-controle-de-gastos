@@ -8,6 +8,7 @@ import { InvestimentosModule } from './investimentos/investimentos.module';
 import { RegioesModule } from './regioes/regioes.module';
 import { RevendaModule } from './revenda/revenda.module';
 
+
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -18,11 +19,11 @@ import { RevendaModule } from './revenda/revenda.module';
       password: 'macacorosa',
       database: 'controle',
       entities: [Investimentos, Regioes, Revenda],
-      synchronize: true
+      synchronize: false
     }),
     InvestimentosModule,
     RegioesModule,
-    RevendaModule,
+    RevendaModule
   ],
 })
 export class AppModule {}

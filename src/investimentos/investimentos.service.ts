@@ -4,15 +4,13 @@ import { Repository } from 'typeorm';
 import { Investimentos } from '../entities/investimentos.entity';
 
 @Injectable()
+
 export class InvestimentosService {
+    
     constructor(
         @InjectRepository(Investimentos)
         private investimentosRepository: Repository<Investimentos>,
     ) {}
-
-    async criar(investimento: Investimentos): Promise<Investimentos> {
-        return this.investimentosRepository.save(investimento);
-    }
 
     async listarTodos(): Promise<Investimentos[]> {
         return this.investimentosRepository.find();
@@ -28,20 +26,11 @@ export class InvestimentosService {
     }
 
     async atualizarQuantidade(
-        nome_telha: string,
-        comprimento: string,
-        largura: string,
-        cor: string,
-        regiao_id: number,
         novoQuantidade: number
     ): Promise<Investimentos | null> {
         const investimento = await this.investimentosRepository.findOne({
             where: {
-                nome_telha,
-                comprimento,
-                largura,
-                cor,
-                regiao_id,
+                quantidade: novoQuantidade
             },
         });
 

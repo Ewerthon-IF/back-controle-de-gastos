@@ -1,16 +1,20 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Revenda } from './revenda.entity';
 
-@Entity('Regioes')
+@Entity('Regiõs')
 
 export class Regioes {
 
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn({ name: 'regiao_id' })
+  regiao_id: number;
 
   @Column()
   nome: string;
 
   @Column()
   catalogo: string;
-  
+
+  @OneToMany(() => Revenda, (revenda) => revenda.regioes)
+  revendas: Revenda[];
+
 }

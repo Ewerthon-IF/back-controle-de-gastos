@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Regioes } from './regioes.entity';
 
 @Entity('Revenda')
 
@@ -23,6 +24,10 @@ export class Revenda {
   quantidade: number;
 
   @Column({ type: 'decimal', precision: 10, scale: 2 })
-  preco_compra: number;
+  preco_revenda: number;
+
+  @ManyToOne(() => Regioes, (regioes) => regioes.revendas)
+  @JoinColumn({ name: 'regiao_id' })
+  regioes: Regioes;
 
 }
