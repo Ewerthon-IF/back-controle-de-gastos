@@ -1,8 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Regioes } from './regioes.entity';
 
-@Entity('Revenda')
-
+@Entity('revenda')
 export class Revenda {
 
   @PrimaryGeneratedColumn()

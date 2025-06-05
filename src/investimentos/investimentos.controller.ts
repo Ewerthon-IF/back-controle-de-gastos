@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch } from '@nestjs/common';
 import { InvestimentosService } from './investimentos.service';
 
 
@@ -16,4 +16,11 @@ export class InvestimentosController {
         return this.investimentosService.buscar(id);
     }
 
+    @Patch('quantidade')
+    async atualizarQuantidade(
+        @Body('telha_id') telha_id: number,
+        @Body('quantidade') quantidade: number,
+    ) {
+        return this.investimentosService.atualizarQuantidadePorId(telha_id, quantidade);
+    }
 }

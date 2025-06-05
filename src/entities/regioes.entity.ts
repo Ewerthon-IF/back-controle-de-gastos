@@ -1,12 +1,10 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Revenda } from './revenda.entity';
 
-@Entity('Regiõs')
-
+@Entity('regioes')
 export class Regioes {
-
-  @PrimaryGeneratedColumn({ name: 'regiao_id' })
-  regiao_id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
   @Column()
   nome: string;
@@ -16,5 +14,4 @@ export class Regioes {
 
   @OneToMany(() => Revenda, (revenda) => revenda.regioes)
   revendas: Revenda[];
-
 }

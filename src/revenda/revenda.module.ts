@@ -2,13 +2,14 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Investimentos } from '../entities/investimentos.entity';
 import { Revenda } from '../entities/revenda.entity';
+import { MovimentacoesModule } from '../movimentacoes/movimentacoes.module';
 import { RevendaController } from './revenda.controller';
-import { RevendaService } from './revenda.service';
+import { RevendasService } from './revenda.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Revenda, Investimentos])],
-  providers: [RevendaService],
+  imports: [TypeOrmModule.forFeature([Revenda, Investimentos]), MovimentacoesModule],
   controllers: [RevendaController],
-  exports: [RevendaService],
+  providers: [RevendasService],
+  exports: [RevendasService],
 })
 export class RevendaModule {}

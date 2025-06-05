@@ -1,33 +1,27 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Regioes } from './regioes.entity';
 
-@Entity('Investimentos')
-
-export class Investimentos {
-    
+@Entity('movimentacoes')
+export class Movimentacoes {
   @PrimaryGeneratedColumn()
   telha_id: number;
 
-  @Column()
-  nome_telha: string;
+  @Column({ type: 'enum', enum: ['compra', 'venda'] })
+  tipo: 'compra' | 'venda';
 
   @Column()
-  comprimento: string;
+  nome: string;
 
   @Column()
-  largura: string;
-
-  @Column()
-  cor: string;
-
-  @Column({ nullable: false })
   quantidade: number;
 
   @Column({ type: 'decimal', precision: 10, scale: 2 })
-  preco_compra: number;
+  preco: number;
 
-  @ManyToOne(() => Regioes, (regioes) => regioes.revendas)
+  @ManyToOne(() => Regioes)
   @JoinColumn({ name: 'regiao_id' })
-  regioes: Regioes;
+  regiao: Regioes;
 
+  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
+  data: Date;
 }

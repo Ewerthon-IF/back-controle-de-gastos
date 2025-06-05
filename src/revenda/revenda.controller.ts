@@ -1,9 +1,9 @@
 import { Body, Controller, Get, Param, Patch } from '@nestjs/common';
-import { RevendaService } from './revenda.service';
+import { RevendasService } from './revenda.service';
 
 @Controller('revenda')
 export class RevendaController {
-  constructor(private revendaService: RevendaService) {}
+  constructor(private revendaService: RevendasService) {}
 
   @Get('regiao/:regiaoId')
   listarPorRegiao(@Param('regiaoId') regiaoId: number) {
@@ -12,12 +12,17 @@ export class RevendaController {
 
   @Patch('quantidade')
   async atualizarQuantidade(
-    @Body('nome_telha') nome_telha: string,
-    @Body('regiao_id') regiao_id: number,
+    @Body('id') id: number, // id da revenda
+    @Body('regiao_id') regiao_id: number, // id da região
+    @Body('telha_id') telha_id: number, // id do investimento
     @Body('quantidade') quantidade: number,
   ) {
-    return this.revendaService.atualizarQuantidadePorNomeERegiao(nome_telha, regiao_id, quantidade);
+    return this.revendaService.atualizarQuantidadePorIdRevenda(id, regiao_id, telha_id, quantidade);
   }
-  
+
+  @Get()
+  listarTodas() {
+    return this.revendaService.listarTodas();
+  }
 }
 
