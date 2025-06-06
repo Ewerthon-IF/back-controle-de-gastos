@@ -19,51 +19,59 @@ export class MovimentacoesService {
     private revendaRepository: Repository<Revenda>,
   ) {}
 
-  async listarTodas() {
-    return this.movimentacoesRepository.find({ relations: ['regiao'] });
-  }
-
-  async buscarPorId(telha_id: number) {
-    return this.movimentacoesRepository.findOne({ where: { telha_id }, relations: ['regiao'] });
-  }
-
   async criar(mov: Partial<Movimentacoes>) {
     const nova = this.movimentacoesRepository.create(mov);
     await this.movimentacoesRepository.save(nova);
 
-    // Corrigir: atualizar investimento apenas pelo telha_id se informado
-    if (mov.tipo === 'compra' && mov['telha_id']) {
-      const investimento = await this.investimentosRepository.findOne({ where: { telha_id: mov['telha_id'] } });
-      if (investimento) {
-        investimento.quantidade += mov.quantidade;
-        investimento.preco_compra = mov.preco;
-        await this.investimentosRepository.save(investimento);
-      }
-    } else if (mov.tipo === 'venda' && mov['id']) {
-      // Atualizar revenda apenas pelo id
-      const revenda = await this.revendaRepository.findOne({ where: { id: mov['id'] } });
-      if (revenda) {
-        revenda.quantidade -= mov.quantidade;
-        await this.revendaRepository.save(revenda);
-      }
-    }
-
     return nova;
   }
 
+  async listarTodas() {
+    const resultado = await this.movimentacoesRepository.find({ relations: ['regiao'] });
+    return Array.isArray(resultado) ? resultado : [];
+  }
+
   async gerarRelatorio() {
-    const investimentos = await this.investimentosRepository.find();
-    const revendas = await this.revendaRepository.find();
-    const totalCompras = investimentos.reduce((soma, item) => {
-      return soma + item.quantidade * Number(item.preco_compra);
-    }, 0);
-    const totalVendas = revendas.reduce((soma, item) => {
-      return soma + item.quantidade * Number(item.preco_revenda);
-    }, 0);
-    return {
-      totalCompras: totalCompras.toFixed(2),
-      totalVendas: totalVendas.toFixed(2),
-      saldo: (totalVendas - totalCompras).toFixed(2),
-    };
+    return this.movimentacoesRepository.find({ relations: ['regiao'] });
+  }
+
+  async buscarPorId(id: number) {
+    return this.movimentacoesRepository.findOne({ where: { id }, relations: ['regiao'] });
+  }
+
+  async gerarRelatorioFinanceiro() {
+    const movimentacoes = await this.movimentacoesRepository.find({ relations: ['regiao'] });
+    const relatorio = [];
+    const agrupado = {};
+    for (const mov of movimentacoes) {
+      const regiao = mov.regiao ? mov.regiao.nome : 'Sem Região';
+      const nomeTelha = mov.nome;
+      const chave = regiao + '|' + nomeTelha;
+      if (!agrupado[chave]) {
+        agrupado[chave] = {
+          regiao,
+          nomeTelha,
+          totalGasto: 0,
+          totalRecebido: 0,
+          movimentacoes: []
+        };
+      }
+      if (mov.tipo === 'compra') {
+        agrupado[chave].totalGasto += Number(mov.preco) * mov.quantidade;
+      } else if (mov.tipo === 'venda') {
+        agrupado[chave].totalRecebido += Number(mov.preco) * mov.quantidade;
+      }
+      agrupado[chave].movimentacoes.push({
+        tipo: mov.tipo,
+        quantidade: mov.quantidade,
+        preco: Number(mov.preco),
+        data: mov.data
+      });
+    }
+    for (const chave in agrupado) {
+      agrupado[chave].saldoFinanceiro = agrupado[chave].totalRecebido - agrupado[chave].totalGasto;
+      relatorio.push(agrupado[chave]);
+    }
+    return relatorio;
   }
 }

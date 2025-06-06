@@ -5,9 +5,7 @@ import { Investimentos } from '../entities/investimentos.entity';
 import { MovimentacoesService } from '../movimentacoes/movimentacoes.service';
 
 @Injectable()
-
 export class InvestimentosService {
-    
     constructor(
         @InjectRepository(Investimentos)
         private investimentosRepository: Repository<Investimentos>,
@@ -27,41 +25,28 @@ export class InvestimentosService {
         return this.buscar(telha_id);
     }
 
-    async atualizarQuantidade(
-        novoQuantidade: number
-    ): Promise<Investimentos | null> {
-        const investimento = await this.investimentosRepository.findOne({
-            where: {
-                quantidade: novoQuantidade
-            },
-        });
-
-        if (!investimento) return null;
-
-        investimento.quantidade = novoQuantidade;
-        return this.investimentosRepository.save(investimento);
-    }
-
-    async remover(id: number): Promise<void> {
-        await this.investimentosRepository.delete(id);
-    }
-
     async atualizarQuantidadePorId(telha_id: number, quantidade: number) {
         const investimento = await this.investimentosRepository.findOne({ where: { telha_id } });
         if (!investimento) {
             throw new Error('Investimento não encontrado para o id informado');
         }
+        // Se for venda (quantidade negativa), verifica estoque
+        if (quantidade < 0 && investimento.quantidade < Math.abs(quantidade)) {
+            throw new Error('Estoque de investimento insuficiente');
+        }
         investimento.quantidade += quantidade;
         await this.investimentosRepository.save(investimento);
-        // Registra movimentação de compra
-                await this.movimentacoesService.criar({
-                  tipo: 'compra',
-                  nome: investimento.nome_telha,
-                  quantidade,
-                  preco: investimento.preco_compra,
-                  regiao: investimento.regioes,
-                });
+        // Registra movimentação
+        await this.movimentacoesService.criar({
+          tipo: quantidade > 0 ? 'compra' : 'venda',
+          nome: investimento.nome_telha,
+          quantidade: Math.abs(quantidade),
+          preco: investimento.preco_compra,
+        });
         return investimento;
     }
 
+    async remover(id: number): Promise<void> {
+        await this.investimentosRepository.delete(id);
+    }
 }

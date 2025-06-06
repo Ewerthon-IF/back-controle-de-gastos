@@ -6,5 +6,6 @@ import { RegioesController } from './regioes.controller';
 @Module({
   imports: [TypeOrmModule.forFeature([Regioes])],
   controllers: [RegioesController],
+  exports: [TypeOrmModule]
 })
 export class RegioesModule {}

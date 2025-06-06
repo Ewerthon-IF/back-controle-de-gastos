@@ -4,7 +4,7 @@ import { Regioes } from './regioes.entity';
 @Entity('movimentacoes')
 export class Movimentacoes {
   @PrimaryGeneratedColumn()
-  telha_id: number;
+  id: number;
 
   @Column({ type: 'enum', enum: ['compra', 'venda'] })
   tipo: 'compra' | 'venda';
@@ -18,7 +18,7 @@ export class Movimentacoes {
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   preco: number;
 
-  @ManyToOne(() => Regioes)
+  @ManyToOne(() => Regioes, { nullable: true })
   @JoinColumn({ name: 'regiao_id' })
   regiao: Regioes;
 
