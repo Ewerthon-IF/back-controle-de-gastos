@@ -14,7 +14,7 @@ export class RevendaController {
   async atualizarQuantidade(
     @Body('id') id: number, // id da revenda
     @Body('regiao_id') regiao_id: number, // id da região
-    @Body('telha_id') telha_id: number, // id do investimento
+    @Body('telha_id') telha_id: number, // id da telha
     @Body('quantidade') quantidade: number,
   ) {
     return this.revendaService.atualizarQuantidadePorIdRevenda(id, regiao_id, telha_id, quantidade);

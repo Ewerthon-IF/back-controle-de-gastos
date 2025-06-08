@@ -19,7 +19,7 @@ export class Investimentos {
   @Column()
   cor: string;
 
-  @Column({ nullable: false })
+  @Column({ type: 'int', nullable: false })
   quantidade: number;
 
   @Column({ type: 'decimal', precision: 10, scale: 2 })

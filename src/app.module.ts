@@ -22,7 +22,7 @@ import { RevendaModule } from './revenda/revenda.module';
       username: 'root',
       password: 'macacorosa',
       database: 'controle',
-      entities: [Investimentos, Regioes, Revenda, Movimentacoes, RelatorioModule],
+      entities: [Investimentos, Regioes, Revenda, Movimentacoes],
       synchronize: false,
     }),
     InvestimentosModule,
