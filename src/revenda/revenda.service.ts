@@ -66,9 +66,8 @@ export class RevendasService {
     if (!investimento) {
       throw new Error('Investimento não encontrado para a telha informada');
     }
-
     if (investimento.quantidade <= 0 || investimento.quantidade < quantidade) {
-      throw new Error('Estoque de investimento insuficiente. Estoque atual: ' + investimento.quantidade + ', solicitado: ' + quantidade);
+      throw new Error('Estoque para a telha selecionada insuficiente');
     }
 
     investimento.quantidade -= quantidade;
@@ -133,6 +132,11 @@ export class RevendasService {
       investimento.largura !== telha.largura
     ) {
       throw new Error('A telha selecionada não corresponde ao investimento selecionado.');
+    }
+
+    // Impede venda se estoque for zero ou menor que solicitado
+    if (investimento.quantidade <= 0 || investimento.quantidade < quantidade) {
+      throw new Error('Estoque de investimento insuficiente. Estoque atual: ' + investimento.quantidade + ', solicitado: ' + quantidade);
     }
 
     investimento.quantidade -= quantidade;

@@ -32,7 +32,7 @@ export class InvestimentosService {
         }
         // Se for venda (quantidade negativa), verifica estoque
         if (quantidade < 0 && investimento.quantidade < Math.abs(quantidade)) {
-            throw new Error('Estoque de investimento insuficiente');
+            throw new Error('Estoque para a telha selecionada insuficiente');
         }
         investimento.quantidade += quantidade;
         await this.investimentosRepository.save(investimento);
