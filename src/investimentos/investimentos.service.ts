@@ -5,7 +5,7 @@ import { Investimentos } from '../entities/investimentos.entity';
 import { MovimentacoesService } from '../movimentacoes/movimentacoes.service';
 
 @Injectable()
-export class InvestimentosService {
+export class InvestimentosService { 
     constructor(
         @InjectRepository(Investimentos)
         private investimentosRepository: Repository<Investimentos>,
@@ -43,6 +43,17 @@ export class InvestimentosService {
           quantidade: Math.abs(quantidade),
           preco: investimento.preco_compra,
         });
+        return investimento;
+    }
+
+    async editarPreco(telha_id: number, novoPreco: number | string) {
+        const precoConvertido = typeof novoPreco === 'string' ? parseFloat(novoPreco) : novoPreco;
+        const investimento = await this.investimentosRepository.findOne({ where: { telha_id } });
+        if (!investimento) {
+            throw new Error('Telha não encontrada em investimentos');
+        }
+        investimento.preco_compra = precoConvertido;
+        await this.investimentosRepository.save(investimento);
         return investimento;
     }
 

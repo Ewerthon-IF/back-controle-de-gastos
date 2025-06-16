@@ -53,6 +53,7 @@ export class MovimentacoesService {
           nomeTelha,
           totalGasto: 0,
           totalRecebido: 0,
+          saldoFinanceiro: 0,
           movimentacoes: []
         };
       }
@@ -73,5 +74,9 @@ export class MovimentacoesService {
       relatorio.push(agrupado[chave]);
     }
     return relatorio;
+  }
+
+  async apagarTodas() {
+    await this.movimentacoesRepository.clear();
   }
 }

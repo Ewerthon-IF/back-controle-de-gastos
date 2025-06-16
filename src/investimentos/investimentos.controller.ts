@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Patch } from '@nestjs/common';
+import { EditarPrecoInvestimentoDto } from './dto/EditarPrecoInvestimentoDto';
 import { InvestimentosService } from './investimentos.service';
-
 
 @Controller('investimentos')
 export class InvestimentosController {
@@ -22,5 +22,10 @@ export class InvestimentosController {
         @Body('quantidade') quantidade: number,
     ) {
         return this.investimentosService.atualizarQuantidadePorId(telha_id, quantidade);
+    }
+
+    @Patch('preco')
+    async editarPreco(@Body() body: EditarPrecoInvestimentoDto) {
+        return this.investimentosService.editarPreco(body.telha_id, body.novoPreco);
     }
 }

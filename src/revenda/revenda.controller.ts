@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Param, Patch } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import { EditarPrecoDto } from './dto/EditarPrecoDto';
 import { RevendasService } from './revenda.service';
 
 @Controller('revenda')
@@ -20,9 +21,19 @@ export class RevendaController {
     return this.revendaService.atualizarQuantidadePorIdRevenda(id, regiao_id, telha_id, quantidade);
   }
 
+  @Patch('preco')
+  async editarPrecoPorRegiao(@Body() body: EditarPrecoDto) {
+    return this.revendaService.editarPrecoPorRegiao(body.id, body.regiao_id, body.novoPreco);
+  }
+
   @Get()
   listarTodas() {
     return this.revendaService.listarTodas();
+  }
+
+  @Post('zerar-tudo')
+  async zerarTudo() {
+    return this.revendaService.zerarEstoquesERelatorioFinanceiro();
   }
 }
 
