@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
 import { Investimentos } from './entities/investimentos.entity';
 import { Movimentacoes } from './entities/movimentacoes.entity';
 import { Regioes } from './entities/regioes.entity';
@@ -12,16 +14,16 @@ import { RegioesModule } from './regioes/regioes.module';
 import { RelatorioModule } from './relatorio/relatorio.module';
 import { RevendaModule } from './revenda/revenda.module';
 
-
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true }), // ← habilita uso em toda a aplicação
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: 'macacorosa',
-      database: 'controle',
+      host: process.env.DB_HOST,
+      port: parseInt(process.env.DB_PORT, 10),
+      username: process.env.DB_USER,
+      password: process.env.DB_PASS,
+      database: process.env.DB_NAME,
       entities: [Investimentos, Regioes, Revenda, Movimentacoes],
       synchronize: false,
     }),
@@ -29,7 +31,7 @@ import { RevendaModule } from './revenda/revenda.module';
     RegioesModule,
     RevendaModule,
     MovimentacoesModule,
-    RelatorioModule
+    RelatorioModule,
   ],
   controllers: [AppController],
 })
